@@ -30,8 +30,8 @@ const uploadRandomBanner = async (client) => {
  */
 module.exports = (client) => {
   const job = new CronJob(
-    // '* 0 * * * *',
-    '0 */5 * * * *',
+    '* 0 * * * *',
+    // '0 */5 * * * *',
     uploadRandomBanner.bind(null, client),
   )
 

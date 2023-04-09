@@ -52,6 +52,6 @@ module.exports = {
     })
     const filename = `${img.id}.${extension}`
     await downloadImage(img.url, filename)
-    await interaction.editReply(`Image downloaded as ${filename}`);
+    await interaction.editReply(`Image "${img.name}" downloaded as ${filename}`);
   },
 };

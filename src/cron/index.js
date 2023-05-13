@@ -1,39 +1,75 @@
-const { CronJob } = require('cron')
-const { Client } = require("discord.js");
+const { CronJob, CronTime } = require('cron')
+const { Client, EmbedBuilder } = require("discord.js");
 const config = require('../config');
 const fs = require('node:fs');
-const path = require('path')
+const path = require('path');
+const { CRON_TIMES, SETTINGS,  } = require('../constants')
+
+const { insertImageHistory, updatePostedCount, getSetting, disablePic } = require('../db')
+const { chooseRandomBanner, pickUsingNewAlgo } = require('../utilities/imagePicker')
 
 /** 
  * @param {Client} client 
  */
-const uploadRandomBanner = async (client) => {
-  console.log('starting image rotation')
+const changeServerBanner = async (client) => {
+  console.log('starting image rotation');
+  // const filepath = await chooseRandomBanner();
+  const image = await pickUsingNewAlgo(client);
 
-	const allImages = fs.readdirSync(config.imagePath).filter(file => file.endsWith('.png'));
-  
-  const randomImage = allImages[Math.floor(Math.random()*allImages.length)];
-  const randomFilepath = path.join(config.imagePath, randomImage);
-  console.log(`chosen: "${randomFilepath}"`);
+  const filepath = path.join(config.imagePath, image.filename);
+
+
+  console.log(`chosen: "${filepath}", id: "${image.id}"`);
 
   const guild = client.guilds.cache.get(config.guildId);
 
-  guild.edit({
-    banner: randomFilepath,
-  })
+  try {
 
+    await guild.edit({
+      banner: filepath,
+    })
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      console.error(`INVALID FILEPATH ABOVE: ${image.id}`);
+      console.info(`disabling pic: ${image.id}`)
+      await disablePic(client.db, image.id)
+      return;
+    }
+    throw err;
+  }
+
+  await updatePostedCount(client.db, image.id);
+  await insertImageHistory(client.db, image.id);
+
+  const shouldDMUser = client[SETTINGS.DM_PREF].has(image.user_id);
+
+  if(shouldDMUser) {
+    try {
+      client.users.send(image.user_id, {
+        content: "Your image just got rotated into the banner!",
+        files: [filepath]
+      })
+    } catch (err) {
+      console.error("Error DMing user")
+      console.error(err)
+    }
+  }
   console.log('finished image rotation')
+  return;
 }
+
+
 
 /**
  * @param {Client} client 
  */
-module.exports = (client) => {
-  const job = new CronJob(
-    '0 0 * * * *',
-    // '0 */5 * * * *',
-    uploadRandomBanner.bind(null, client),
-  )
+module.exports = async (client) => {
 
-  return job;
+  const cronjobTime = await getSetting(client.db, SETTINGS.CRON_TIME, config.defaultCronTime)
+
+  const job = new CronJob(
+    cronjobTime,
+    changeServerBanner.bind(null, client),
+  )
+  return job
 }

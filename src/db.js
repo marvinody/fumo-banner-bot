@@ -1,14 +1,20 @@
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 const { open, Database } = require('sqlite');
+const { readFile } = require('fs/promises')
+const { DB_NAME } = require('./constants')
 
 const createConnection = async () => {
   const db = await open({
-    filename: path.join(__dirname, 'temp.db'),
+    filename: path.join(__dirname, '..', DB_NAME),
     driver: sqlite3.Database
   })
 
-  return db
+  const initSql = (await readFile(path.join(__dirname, 'db.sql'))).toString();
+
+  await db.exec(initSql);
+
+  return db;
 }
 
 /**

@@ -23,6 +23,8 @@ const SETTINGS = {
   DM_PREF: 'dm-pref',
 }
 
+const DB_NAME = 'okina.db'
+
 module.exports = {
   ALLOWED_IMAGE_TYPES,
   ALLOWED_DECODERS,
@@ -30,5 +32,6 @@ module.exports = {
   MINIMUM_HEIGHT,
   MINIMUM_WIDTH,
   CRON_TIMES,
-  SETTINGS
+  SETTINGS,
+  DB_NAME,
 }

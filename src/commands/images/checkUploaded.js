@@ -29,7 +29,7 @@ module.exports = {
         
         )
         
-    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+    .setDefaultMemberPermissions(PermissionFlagsBits.EmbedLinks)
     .setDMPermission(false),
 
   /**

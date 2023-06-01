@@ -75,7 +75,7 @@ module.exports = {
     const embeds = imagePaths.map((imagepath, idx) => {
       const embedBuilder = new EmbedBuilder();
       embedBuilder
-      .setTitle(`Images for ${user.username}`)
+      .setTitle(`Images for other person`)
       .setURL('https://discord.gg/fumofumo')
       .setFooter({
         text: footer

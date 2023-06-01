@@ -6,7 +6,9 @@ const path = require('path');
 const { CRON_TIMES, SETTINGS,  } = require('../constants')
 
 const { insertImageHistory, updatePostedCount, getSetting, disablePic } = require('../db')
-const { chooseRandomBanner, pickUsingNewAlgo } = require('../utilities/imagePicker')
+const { chooseRandomBanner, pickUsingNewAlgo } = require('../utilities/imagePicker');
+const { addPride } = require('../utilities/addPrideOverlayToImage');
+const { isJune } = require('../utilities/dates');
 
 /** 
  * @param {Client} client 
@@ -21,13 +23,21 @@ const changeServerBanner = async (client) => {
 
   console.log(`chosen: "${filepath}", id: "${image.id}"`);
 
+
+
   const guild = client.guilds.cache.get(config.guildId);
 
-  try {
+  let imageResolvable = filepath
+  if(isJune()) {
+    console.log(`June detected: adding pride overlay`)
+    const prideOverlaid = await addPride(filepath);
+    imageResolvable = prideOverlaid;
+  } 
 
-    await guild.edit({
-      banner: filepath,
-    })
+  try {
+      await guild.edit({
+        banner: imageResolvable,
+      })
   } catch (err) {
     if (err.code === 'ENOENT') {
       console.error(`INVALID FILEPATH ABOVE: ${image.id}`);

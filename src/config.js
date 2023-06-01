@@ -11,4 +11,5 @@ module.exports = {
   resizedWidth: MINIMUM_WIDTH,
   outputImageType: 'png',
   defaultCronTime: CRON_TIMES.EVERY_HOUR,
+  overlays: path.join(__dirname, '..', 'overlays'),
 }

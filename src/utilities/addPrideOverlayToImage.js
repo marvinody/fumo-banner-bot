@@ -9,7 +9,9 @@ const PRIDE_FLAG_FILEPATH = path.join(config.overlays, PRIDE_FLAG_FILENAME);
 const PRIDE_FRAME_FILEPATH = path.join(config.overlays, PRIDE_FRAME_FILENAME);
 
 const addPride = async (filepath) => {
-  const img = await sharp(filepath)
+  const img = await sharp(filepath, {
+    sequentialRead: false
+  })
     .resize(862, 442)
     .extend({
       left: 49,
@@ -27,13 +29,15 @@ const addPride = async (filepath) => {
 
   return sharp(PRIDE_FRAME_FILEPATH, {
     animated: true,
+    sequentialRead: false,
   })
     .composite(
       [
         {
           input: img, 
           tile: true,
-          gravity: 'northwest'
+          gravity: 'northwest',
+          sequentialRead: false,
         },
       ]
     )
@@ -43,7 +47,9 @@ const addPride = async (filepath) => {
 
 
 const addPrideAndSaveToFile = async (filepath, out, blend = 'overlay') => {
-  const img = await sharp(filepath)
+  const img = await sharp(filepath, {
+    sequentialRead: false
+  })
     .resize(862, 442)
     .extend({
       left: 49,
@@ -61,15 +67,18 @@ const addPrideAndSaveToFile = async (filepath, out, blend = 'overlay') => {
 
   return sharp(PRIDE_FRAME_FILEPATH, {
     animated: true,
+    sequentialRead: false,
   })
     .composite(
       [
         {
           input: img, 
           tile: true,
-          gravity: 'northwest'
+          gravity: 'northwest',
+          sequentialRead: false,
         },
-      ]
+      ],
+      
     )
     .toFormat('gif')
     .toFile(out)

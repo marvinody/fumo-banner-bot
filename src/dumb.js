@@ -3,42 +3,23 @@ const { addPrideAndSaveToFile } = require("./utilities/addPrideOverlayToImage");
 const {readdir, mkdir} = require('node:fs/promises')
 const path = require('path');
 
-const outFolder = 'temp-folder/frame';
+const outFolder = 'temp-folder/gay-gif';
 
 (async () => {
   const imagesDirList = await readdir(config.imagePath);
   const images = imagesDirList.filter(img => img.endsWith('.png'))
 
-  const blends = 
-  [
-  // 'add',
-  // 'saturate',
-  // 'multiply',
-  // 'screen',
-  // 'overlay',
-  // 'darken',
-  // 'lighten',
-  // 'colour-dodge',
-  // 'colour-burn',
-  // 'hard-light',
-  'soft-light',
-  // 'difference',
-  // 'exclusion`',
-  ]
-  // const blends = 
-  // `hard-light`
-  // .split(', ')
 
+
+  await mkdir(path.join(outFolder), { recursive: true});
   for (const image of images) {
+    console.log(`doing: ${image}`)
     
-    await mkdir(path.join(outFolder, image), { recursive: true});
+    const noExtFilename = image.slice(0, -'.png'.length);
 
-    for (const blend of blends) {
       const filepath = path.join(config.imagePath, image);
-      const outfile = path.join(outFolder, `${blend}-${image}`);
-      await addPrideAndSaveToFile(filepath, outfile, blend)
-    }
-
+      const outfile = path.join(outFolder, `${noExtFilename}.gif`);
+      await addPrideAndSaveToFile(filepath, outfile)
 
   }
 

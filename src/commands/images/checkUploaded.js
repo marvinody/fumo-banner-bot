@@ -26,9 +26,9 @@ module.exports = {
             .setName('person')
             .setDescription('Person to search for (this won\'t ping them)')
             .setRequired(true))
-        
-        )
-        
+
+    )
+
     .setDefaultMemberPermissions(PermissionFlagsBits.EmbedLinks)
     .setDMPermission(false),
 
@@ -41,7 +41,7 @@ module.exports = {
     const subcommand = interaction.options.getSubcommand();
     let user = interaction.user;
 
-    if(subcommand === 'other') {
+    if (subcommand === 'other') {
       user = interaction.options.getMentionable('person');
     }
     const userId = user.id;
@@ -52,7 +52,7 @@ module.exports = {
 
     const picRows = await findExistingPicsByUser(bot.db, userId)
 
-    if(picRows.length === 0) {
+    if (picRows.length === 0) {
       return interaction.editReply({
         content: "User does not have any images for the banner rotation."
       })
@@ -61,7 +61,7 @@ module.exports = {
     const imagePaths = picRows
       .map(row => row.filename)
       .map(filename => path.join(config.imagePath, filename))
-    
+
     const attachments = imagePaths.map((imagepath, idx) => {
       const attachment = new AttachmentBuilder(imagepath, {
         name: `image-${idx}.png`
@@ -75,12 +75,12 @@ module.exports = {
     const embeds = imagePaths.map((imagepath, idx) => {
       const embedBuilder = new EmbedBuilder();
       embedBuilder
-      .setTitle(`Images for other person`)
-      .setURL('https://discord.gg/fumofumo')
-      .setFooter({
-        text: footer
-      })
-      .setImage(`attachment://image-${idx}.png`);
+        .setTitle(`Images for other person`)
+        .setURL('https://discord.gg/fumofumo')
+        .setFooter({
+          text: footer
+        })
+        .setImage(`attachment://image-${idx}.png`);
 
       return embedBuilder;
     })

@@ -43,6 +43,17 @@ const findExistingPicsByUser = (db, userId) => {
 /**
  * @param {Database<sqlite3.Database, sqlite3.Statement>} db 
 */
+const findAllPicsByUser = (db, userId) => {
+  const sql = `SELECT * FROM images WHERE user_id = :userId`;
+
+  return db.all(sql, {
+    ':userId': userId,
+  })
+}
+
+/**
+ * @param {Database<sqlite3.Database, sqlite3.Statement>} db 
+*/
 const getAllPics = (db) => {
   const sql = `SELECT * FROM images`;
 
@@ -150,6 +161,7 @@ module.exports = {
   createConnection,
   addNewPic,
   findExistingPicsByUser,
+  findAllPicsByUser,
   getAllPics,
   getAllEnabledPics,
   disablePic,

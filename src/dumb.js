@@ -1,9 +1,9 @@
 const config = require("./config");
-const { addPrideAndSaveToFile } = require("./utilities/addPrideOverlayToImage");
+const { addFumoversaryAndSaveToFile } = require("./utilities/addFumoversaryToImage");
 const {readdir, mkdir} = require('node:fs/promises')
 const path = require('path');
 
-const outFolder = 'temp-folder/gay-gif';
+const outFolder = 'temp-folder/fumoversary';
 
 (async () => {
   const imagesDirList = await readdir(config.imagePath);
@@ -18,8 +18,8 @@ const outFolder = 'temp-folder/gay-gif';
     const noExtFilename = image.slice(0, -'.png'.length);
 
       const filepath = path.join(config.imagePath, image);
-      const outfile = path.join(outFolder, `${noExtFilename}.gif`);
-      await addPrideAndSaveToFile(filepath, outfile)
+      const outfile = path.join(outFolder, `${noExtFilename}.png`);
+      await addFumoversaryAndSaveToFile(filepath, outfile)
 
   }
 

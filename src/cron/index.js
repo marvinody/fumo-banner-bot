@@ -8,7 +8,8 @@ const { CRON_TIMES, SETTINGS,  } = require('../constants')
 const { insertImageHistory, updatePostedCount, getSetting, disablePic } = require('../db')
 const { chooseRandomBanner, pickUsingNewAlgo } = require('../utilities/imagePicker');
 const { addPride } = require('../utilities/addPrideOverlayToImage');
-const { isJune } = require('../utilities/dates');
+const { addFumoversary } = require('../utilities/addFumoversaryToImage');
+const { isJune, isAugust } = require('../utilities/dates');
 
 /** 
  * @param {Client} client 
@@ -32,7 +33,11 @@ const changeServerBanner = async (client) => {
     console.log(`June detected: adding pride overlay`)
     const prideOverlaid = await addPride(filepath);
     imageResolvable = prideOverlaid;
-  } 
+  } else if (isAugust()) {
+    console.log(`August detected: adding fumoversary overlay`);
+    const fumoversaryOverlaid = await addFumoversary(filepath);
+    imageResolvable = fumoversaryOverlaid;
+  }
 
   try {
       await guild.edit({

@@ -1,9 +1,9 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, Client } = require('discord.js');
 
-const { ALLOWED_DECODERS, ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE_IN_MB } = require('../../constants')
+const { ALLOWED_DECODERS, ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE_IN_MB, MAX_ENABLED_PER_USER } = require('../../constants')
 const { is16by9AR } = require('../../utilities/imageSizeChecker')
 const { UserFixableAction, WrongFileType, ImageWrongAspectRatio, ImageFilesizeTooLarge } = require('../../utilities/errors')
-const { addNewPic } = require('../../db');
+const { addNewPic, getAllEnabledPics } = require('../../db');
 const { pipeline } = require('../../utilities/imagePipeline');
 const config = require('../../config');
 
@@ -57,20 +57,16 @@ module.exports = {
         ephemeral: true
       })
       const filename = `${img.id}.${config.outputImageType}`
-      // await downloadImage(img.url, filename)
 
       await pipeline(img.url, filename)
 
-      await addNewPic(bot.db, filename, user.id)
+      const picsEnabled = await findExistingPicsByUser(bot.db, user.id);
+      const shouldNewBeEnabled = picsEnabled < MAX_ENABLED_PER_USER
 
+      await addNewPic(bot.db, filename, user.id, shouldNewBeEnabled)
 
-      await interaction.editReply(`Image "${img.name}" downloaded as ${filename}`);
-
-      // interaction.reply({
-      //   embeds: [
-
-      //   ]
-      // })
+      const extendedStr = `user has ${(picsEnabled).length} enabled, so this has been set to "${shouldNewBeEnabled ? 'enabled' : 'disabled'}"`
+      await interaction.editReply(`Image "${img.name}" downloaded as ${filename} (${extendedStr})`);
 
     } catch (err) {
       if (err instanceof UserFixableAction) {

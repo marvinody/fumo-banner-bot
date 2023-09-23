@@ -20,12 +20,13 @@ const createConnection = async () => {
 /**
  * @param {Database<sqlite3.Database, sqlite3.Statement>} db 
 */
-const addNewPic = (db, filename, userId) => {
-  const sql = `INSERT INTO images(filename, user_id) VALUES (:filename, :userId)`;
+const addNewPic = (db, filename, userId, enabled) => {
+  const sql = `INSERT INTO images(filename, user_id, enabled) VALUES (:filename, :userId, :enabled)`;
 
   return db.run(sql, {
     ':filename': filename,
     ':userId': userId,
+    ':enabled': enabled,
   })
 }
 
@@ -44,7 +45,7 @@ const findExistingPicsByUser = (db, userId) => {
  * @param {Database<sqlite3.Database, sqlite3.Statement>} db 
 */
 const findAllPicsByUser = (db, userId) => {
-  const sql = `SELECT * FROM images WHERE user_id = :userId`;
+  const sql = `SELECT * FROM images WHERE user_id = :userId ORDER BY id ASC`;
 
   return db.all(sql, {
     ':userId': userId,
@@ -81,6 +82,18 @@ const disablePic = (db, imageId) => {
 
   return db.run(sql, {
     ':imageId': imageId,
+  })
+}
+
+/**
+ * @param {Database<sqlite3.Database, sqlite3.Statement>} db 
+*/
+const setEnabledStatusForPic = (db, imageId, isEnabled) => {
+  const sql = `UPDATE images SET enabled = :isEnabled WHERE id = :imageId`;
+
+  return db.run(sql, {
+    ':imageId': imageId,
+    ':isEnabled': isEnabled,
   })
 }
 
@@ -171,4 +184,5 @@ module.exports = {
   getSetting,
   setSetting,
   getPicById,
+  setEnabledStatusForPic,
 };

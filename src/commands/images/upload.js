@@ -3,7 +3,7 @@ const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, C
 const { ALLOWED_DECODERS, ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE_IN_MB, MAX_ENABLED_PER_USER } = require('../../constants')
 const { is16by9AR } = require('../../utilities/imageSizeChecker')
 const { UserFixableAction, WrongFileType, ImageWrongAspectRatio, ImageFilesizeTooLarge } = require('../../utilities/errors')
-const { addNewPic, getAllEnabledPics } = require('../../db');
+const { addNewPic, getAllEnabledPics, findExistingPicsByUser } = require('../../db');
 const { pipeline } = require('../../utilities/imagePipeline');
 const config = require('../../config');
 

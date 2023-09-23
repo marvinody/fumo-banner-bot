@@ -11,6 +11,8 @@ const MAX_FILE_SIZE_IN_MB = 5;
 const MINIMUM_WIDTH = 960;
 const MINIMUM_HEIGHT = 540;
 
+const MAX_ENABLED_PER_USER = 5;
+
 const CRON_TIMES = {
   EVERY_30_SECONDS: '*/30 * * * * *',
   EVERY_HOUR: '0 0 * * * *',
@@ -34,4 +36,5 @@ module.exports = {
   CRON_TIMES,
   SETTINGS,
   DB_NAME,
+  MAX_ENABLED_PER_USER,
 }

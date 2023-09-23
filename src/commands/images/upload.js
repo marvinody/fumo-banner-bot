@@ -61,7 +61,7 @@ module.exports = {
       await pipeline(img.url, filename)
 
       const picsEnabled = await findExistingPicsByUser(bot.db, user.id);
-      const shouldNewBeEnabled = picsEnabled < MAX_ENABLED_PER_USER
+      const shouldNewBeEnabled = picsEnabled.length < MAX_ENABLED_PER_USER
 
       await addNewPic(bot.db, filename, user.id, shouldNewBeEnabled)
 

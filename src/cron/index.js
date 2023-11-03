@@ -9,8 +9,9 @@ const { insertImageHistory, updatePostedCount, getSetting, disablePic } = requir
 const { chooseRandomBanner, pickUsingNewAlgo } = require('../utilities/imagePicker');
 const { addPride } = require('../utilities/addPrideOverlayToImage');
 const { addFumoversary } = require('../utilities/addFumoversaryToImage');
-const { isJune, isAugust, isOctober } = require('../utilities/dates');
+const { isJune, isAugust, isOctober, isNovember } = require('../utilities/dates');
 const { addHalloween } = require('../utilities/addHalloweenToImage');
+const { addThanksgiving } = require('../utilities/addThanksgivingToImage');
 
 /** 
  * @param {Client} client 
@@ -42,6 +43,10 @@ const changeServerBanner = async (client) => {
     console.log(`October detected: adding halloween overlay`);
     const halloweenOverlaid = await addHalloween(filepath);
     imageResolvable = halloweenOverlaid;
+  } else if (isNovember()) {
+    console.log(`November detected: adding thanksgiving overlay`);
+    const thanksgivingOverlaid = await addThanksgiving(filepath);
+    imageResolvable = thanksgivingOverlaid;
   }
 
   try {

@@ -13,26 +13,28 @@ const { isJune, isAugust, isOctober, isNovember, isDecember } = require('../util
 const { addHalloween } = require('../utilities/addHalloweenToImage');
 const { addThanksgiving } = require('../utilities/addThanksgivingToImage');
 const { addChristmas } = require('../utilities/addChristmasToImage');
+const {addYuyuko, isYuyukoDay} = require('../utilities/addYuyukoToImage');
 
 /** 
  * @param {Client} client 
  */
 const changeServerBanner = async (client) => {
   console.log('starting image rotation');
-  // const filepath = await chooseRandomBanner();
-  const image = await pickUsingNewAlgo(client);
+  const image = await chooseRandomBanner(client);
+  // const image = await pickUsingNewAlgo(client);
 
   const filepath = path.join(config.imagePath, image.filename);
 
-
   console.log(`chosen: "${filepath}", id: "${image.id}"`);
-
-
 
   const guild = client.guilds.cache.get(config.guildId);
 
   let imageResolvable = filepath
-  if(isJune()) {
+  if (isYuyukoDay()) {
+    console.log(`Yuyuko Day detected: adding yuyuko overlay`)
+    const charOverlaid = await addYuyuko(filepath);
+    imageResolvable = charOverlaid;
+  } else if(isJune()) {
     console.log(`June detected: adding pride overlay`)
     const prideOverlaid = await addPride(filepath);
     imageResolvable = prideOverlaid;

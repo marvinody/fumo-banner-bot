@@ -41,7 +41,7 @@ const pickUsingNewAlgo = async (client) => {
 /** 
  * @param {Client} client 
  */
-const chooseRandomBanner = async () => {
+const chooseRandomBanner = async (client) => {
   const { db } = client;
   const allRows = await getAllEnabledPics(db);
 

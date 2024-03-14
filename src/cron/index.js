@@ -20,8 +20,8 @@ const {addYuyuko, isYuyukoDay} = require('../utilities/addYuyukoToImage');
  */
 const changeServerBanner = async (client) => {
   console.log('starting image rotation');
-  const image = await chooseRandomBanner(client);
-  // const image = await pickUsingNewAlgo(client);
+  // const image = await chooseRandomBanner(client);
+  const image = await pickUsingNewAlgo(client);
 
   const filepath = path.join(config.imagePath, image.filename);
 

@@ -77,6 +77,26 @@ const getAllEnabledPics = (db) => {
 /**
  * @param {Database<sqlite3.Database, sqlite3.Statement>} db 
 */
+const getAllUsersWithEnabled = (db) => {
+  const sql = `SELECT DISTINCT user_id FROM images WHERE enabled = 1`;
+
+  return db.all(sql)
+}
+
+/**
+ * @param {Database<sqlite3.Database, sqlite3.Statement>} db 
+*/
+const disableAllPicsByUserId = (db, userId) => {
+  const sql = `UPDATE images SET enabled = 0 WHERE user_id = :userId`;
+
+  return db.run(sql, {
+    ':userId': userId,
+  })
+}
+
+/**
+ * @param {Database<sqlite3.Database, sqlite3.Statement>} db 
+*/
 const disablePic = (db, imageId) => {
   const sql = `UPDATE images SET enabled = 0 WHERE id = :imageId`;
 
@@ -185,4 +205,6 @@ module.exports = {
   setSetting,
   getPicById,
   setEnabledStatusForPic,
+  getAllUsersWithEnabled,
+  disableAllPicsByUserId,
 };

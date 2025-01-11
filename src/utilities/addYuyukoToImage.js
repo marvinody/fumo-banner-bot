@@ -68,7 +68,9 @@ const isYuyukoDay = () => {
 
 
 module.exports = {
-  addYuyuko,
+  name: 'Yuyuko Day',
+  applyToBuffer: addYuyuko,
+  isActive: isYuyukoDay,
+  priority: 10,
   addYuyukoAndSaveToFile,
-  isYuyukoDay,
 }

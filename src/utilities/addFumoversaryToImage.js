@@ -1,6 +1,8 @@
 const path = require('path');
 const config = require('../config');
-const sharp = require('sharp')
+const sharp = require('sharp');
+const { isAugust } = require('./dates');
+const { name } = require('./addPrideOverlayToImage');
 
 const FUMOVERSARY_FILENAME = 'fumoversary.png';
 
@@ -55,6 +57,9 @@ const addFumoversaryAndSaveToFile = async (filepath, out, blend = 'overlay') => 
 
 
 module.exports = {
-  addFumoversary,
+  name: 'Fumoversary',
+  applyToBuffer: addFumoversary,
+  isActive: isAugust,
+  priority: 1,
   addFumoversaryAndSaveToFile,
 }

@@ -7,13 +7,12 @@ const { CRON_TIMES, SETTINGS,  } = require('../constants')
 
 const { insertImageHistory, updatePostedCount, getSetting, disablePic } = require('../db')
 const { chooseRandomBanner, pickUsingNewAlgo } = require('../utilities/imagePicker');
-const { addPride } = require('../utilities/addPrideOverlayToImage');
-const { addFumoversary } = require('../utilities/addFumoversaryToImage');
-const { isJune, isAugust, isOctober, isNovember, isDecember } = require('../utilities/dates');
-const { addHalloween } = require('../utilities/addHalloweenToImage');
-const { addThanksgiving } = require('../utilities/addThanksgivingToImage');
-const { addChristmas } = require('../utilities/addChristmasToImage');
-const {addYuyuko, isYuyukoDay} = require('../utilities/addYuyukoToImage');
+const pride = require('../utilities/addPrideOverlayToImage');
+const fumoversary = require('../utilities/addFumoversaryToImage');
+const halloween = require('../utilities/addHalloweenToImage');
+const thanksgiving = require('../utilities/addThanksgivingToImage');
+const christmas = require('../utilities/addChristmasToImage');
+const yuyukoDay = require('../utilities/addYuyukoToImage');
 
 /** 
  * @param {Client} client 
@@ -30,30 +29,25 @@ const changeServerBanner = async (client) => {
   const guild = client.guilds.cache.get(config.guildId);
 
   let imageResolvable = filepath
-  if (isYuyukoDay()) {
-    console.log(`Yuyuko Day detected: adding yuyuko overlay`)
-    const charOverlaid = await addYuyuko(filepath);
-    imageResolvable = charOverlaid;
-  } else if(isJune()) {
-    console.log(`June detected: adding pride overlay`)
-    const prideOverlaid = await addPride(filepath);
-    imageResolvable = prideOverlaid;
-  } else if (isAugust()) {
-    console.log(`August detected: adding fumoversary overlay`);
-    const fumoversaryOverlaid = await addFumoversary(filepath);
-    imageResolvable = fumoversaryOverlaid;
-  } else if (isOctober()) {
-    console.log(`October detected: adding halloween overlay`);
-    const halloweenOverlaid = await addHalloween(filepath);
-    imageResolvable = halloweenOverlaid;
-  } else if (isNovember()) {
-    console.log(`November detected: adding thanksgiving overlay`);
-    const thanksgivingOverlaid = await addThanksgiving(filepath);
-    imageResolvable = thanksgivingOverlaid;
-  } else if (isDecember()) {
-    console.log(`December detected: adding christmas overlay`);
-    const christmasOverlaid = await addChristmas(filepath);
-    imageResolvable = christmasOverlaid;
+
+  const events = [
+    pride,
+    fumoversary,
+    halloween,
+    thanksgiving,
+    christmas,
+    yuyukoDay,
+  ]
+
+  const activeEvents = events.filter(event => event.isActive())
+  // highest priority first
+  const sortedEvents = activeEvents.sort((a, b) => b.priority - a.priority)
+
+  if (sortedEvents.length > 0) {
+    const event = sortedEvents[0]
+    console.log(`${event.name} detected: adding overlay`)
+    const overlaid = await event.applyToBuffer(filepath)
+    imageResolvable = overlaid
   }
 
   try {

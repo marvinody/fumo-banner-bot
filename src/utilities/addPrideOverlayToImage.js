@@ -1,6 +1,7 @@
 const path = require('path');
 const config = require('../config');
-const sharp = require('sharp')
+const sharp = require('sharp');
+const { isJune } = require('./dates');
 
 const PRIDE_FLAG_FILENAME = 'pride_frame.png';
 const PRIDE_FRAME_FILENAME = 'pride_frame.gif';
@@ -86,6 +87,9 @@ const addPrideAndSaveToFile = async (filepath, out, blend = 'overlay') => {
 
 
 module.exports = {
-  addPride,
+  name: 'Pride Month',
+  applyToBuffer: addPride,
+  isActive: isJune,
+  priority: 1,
   addPrideAndSaveToFile,
 }

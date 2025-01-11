@@ -4,12 +4,12 @@ const sharp = require('sharp');
 const { DateTime, Info } = require("luxon");
 
 
-const OVERLAY_FILENAME = 'yuyuko.png';
+const OVERLAY_FILENAME = 'satori.png';
 
 const OVERLAY_FILEPATH = path.join(config.overlays, OVERLAY_FILENAME);
 
-const INNER_WIDTH = 865
-const INNER_HEIGHT = 505
+const INNER_WIDTH = 835
+const INNER_HEIGHT = 470
 const RIGHT_PADDING = 960 - INNER_WIDTH;
 const BOTTOM_PADDING = 540 - INNER_HEIGHT;
 
@@ -47,30 +47,30 @@ const transform = async (filepath) => {
     .toFormat('png')
 }
 
-const addYuyuko = async (filepath) => {
+const addSatori = async (filepath) => {
   const composite = await transform(filepath);
   return composite.toBuffer()
 };
 
 
-const addYuyukoAndSaveToFile = async (filepath, out, blend = 'overlay') => {
+const addSatoriAndSaveToFile = async (filepath, out, blend = 'overlay') => {
   const composite = await transform(filepath);
   return composite.toFile(out)
 };
 
-const isYuyukoDay = () => {
+const isSatoriDay = () => {
   const now = DateTime.now().plus({
     hours: 3,
   });
   
-  return now.month === 2 && now.day === 23;
+  return now.month === 3 && now.day === 10;
 }
 
 
 module.exports = {
-  name: 'Yuyuko Day',
-  applyToBuffer: addYuyuko,
-  isActive: isYuyukoDay,
+  name: 'Satori Day',
+  applyToBuffer: addSatori,
+  isActive: isSatoriDay,
   priority: 10,
-  addYuyukoAndSaveToFile,
+  addSatoriAndSaveToFile,
 }

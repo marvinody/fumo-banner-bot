@@ -1,6 +1,7 @@
 const path = require('path');
 const config = require('../config');
-const sharp = require('sharp')
+const sharp = require('sharp');
+const { isNovember } = require('./dates');
 
 const THANKSGIVING_FILENAME = 'thanksgiving.png';
 
@@ -42,6 +43,9 @@ const addThanksgivingAndSaveToFile = async (filepath, out, blend = 'overlay') =>
 
 
 module.exports = {
-  addThanksgiving,
+  name: 'Thanksgiving',
+  applyToBuffer: addThanksgiving,
+  isActive: isNovember,
+  priority: 1,
   addThanksgivingAndSaveToFile,
 }

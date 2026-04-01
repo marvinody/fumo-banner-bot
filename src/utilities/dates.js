@@ -1,6 +1,5 @@
 const { DateTime, Info } = require("luxon");
 
-
 const MONTHS = {
   JANUARY: 1,
   FEBRUARY: 2,
@@ -25,6 +24,14 @@ const _isMonth = (month) => {
   return currentMonth === month;
 };
 
+const _isDate = (month, day) => {
+  const now = DateTime.now().plus({
+    hours: 3,
+  });
+
+  return now.month === month && now.day === day;
+};
+
 const isJanuary = () => _isMonth(MONTHS.JANUARY);
 const isFebruary = () => _isMonth(MONTHS.FEBRUARY);
 const isMarch = () => _isMonth(MONTHS.MARCH);
@@ -37,8 +44,9 @@ const isSeptember = () => _isMonth(MONTHS.SEPTEMBER);
 const isOctober = () => _isMonth(MONTHS.OCTOBER);
 const isNovember = () => _isMonth(MONTHS.NOVEMBER);
 const isDecember = () => _isMonth(MONTHS.DECEMBER);
-
-
+const isAprilFirst = () => _isDate(MONTHS.APRIL, 1);
+const isYuyukoDay = () => _isDate(MONTHS.FEBRUARY, 23);
+const isSatoriDay = () => _isDate(MONTHS.MARCH, 10);
 
 module.exports = {
   isJanuary,
@@ -53,4 +61,7 @@ module.exports = {
   isOctober,
   isNovember,
   isDecember,
+  isAprilFirst,
+  isYuyukoDay,
+  isSatoriDay,
 };
